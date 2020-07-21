@@ -256,9 +256,14 @@ class LoadStreams:  # multiple IP or RTSP cameras
         return 0  # 1E12 frames = 32 streams at 30 FPS for 30 years
 
 
+def defaultImage2Label(imageFile):
+    ext = os.path.splitext(imageFile)[-1]
+    return imageFile.replace('images', 'labels').replace(ext, '.txt')
+
+
 class LoadImagesAndLabels(Dataset):  # for training/testing
     def __init__(self, path, img_size=416, batch_size=16, augment=False, hyp=None, rect=False, image_weights=False,
-                 cache_images=False, single_cls=False, pad=0.0):
+                 cache_images=False, single_cls=False, pad=0.0, image2label=defaultImage2Label):
         try:
             path = str(Path(path))  # os-agnostic
             parent = str(Path(path).parent) + os.sep
@@ -289,8 +294,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         self.mosaic = self.augment and not self.rect  # load 4 images at a time into a mosaic (only during training)
 
         # Define labels
-        self.label_files = [x.replace('images', 'labels').replace(os.path.splitext(x)[-1], '.txt')
-                            for x in self.img_files]
+        self.label_files = [image2label(x) for x in self.img_files]
 
         # Read image shapes (wh)
         sp = path.replace('.txt', '') + '.shapes'  # shapefile path
