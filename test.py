@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from models import *
 from utils.datasets import *
 from utils.utils import *
-from utils2.path_utils import ensureRelativeToDir
+from trvo_utils.path_utils import ensureRelativeToDir
 
 
 def test(cfg,
