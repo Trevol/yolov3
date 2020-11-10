@@ -497,14 +497,14 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
 
         if self.augment:
             # random left-right flip
-            lr_flip = True
+            lr_flip = self.hyp.get('lr_flip', False)
             if lr_flip and random.random() < 0.5:
                 img = np.fliplr(img)
                 if nL:
                     labels[:, 1] = 1 - labels[:, 1]
 
             # random up-down flip
-            ud_flip = False
+            ud_flip = self.hyp.get('ud_flip', False)
             if ud_flip and random.random() < 0.5:
                 img = np.flipud(img)
                 if nL:
